@@ -8,7 +8,7 @@ const {
   backToMenuKeyboard,
   profileCardKeyboard,
 } = require("./lib/telegram");
-const { getProfile, saveProfile, resetProfile, getMemory, saveMemory } = require("./lib/store");
+const { initBlobs, getProfile, saveProfile, resetProfile, getMemory, saveMemory } = require("./lib/store");
 const { runAgent } = require("./lib/ai");
 
 const MENU_TEXT = "<b>منوی اصلی</b> 👇\nیکی رو انتخاب کن یا هر چیزی خواستی مستقیم برام بنویس.";
@@ -125,6 +125,8 @@ exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 200, body: "OK" };
   }
+
+  initBlobs(event); // باید قبل از هر استفاده‌ای از Blobs صدا زده بشه
 
   try {
     const update = JSON.parse(event.body);
