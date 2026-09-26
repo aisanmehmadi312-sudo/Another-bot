@@ -1,5 +1,11 @@
 // lib/store.js — جایگزین "Content Bot Profiles" Data Table با Netlify Blobs
-const { getStore } = require("@netlify/blobs");
+const { getStore, connectLambda } = require("@netlify/blobs");
+
+// در حالت Lambda compatibility، Blobs باید دستی به event درخواست وصل بشه
+// (باید یک‌بار در ابتدای هر اجرای فانکشن صدا زده بشه)
+function initBlobs(event) {
+  connectLambda(event);
+}
 
 function profileStore() {
   return getStore("content-bot-profiles");
@@ -52,4 +58,4 @@ async function saveMemory(chatId, messages) {
   await store.setJSON(`memory:${chatId}`, trimmed);
 }
 
-module.exports = { getProfile, saveProfile, resetProfile, getMemory, saveMemory };
+module.exports = { initBlobs, getProfile, saveProfile, resetProfile, getMemory, saveMemory };
